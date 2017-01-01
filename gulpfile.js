@@ -10,7 +10,7 @@ gulp.task('delete', function(cb) {
 });
 
 gulp.task('project', function() {
-  var deployConfig = Object.create(require('./webpack.dev.js'));
+  var deployConfig = Object.create(require('./webpack.prod.js'));
 
   return gulp.src('./src/index.js')
     .pipe(webpackStream(deployConfig))
@@ -22,4 +22,4 @@ gulp.task('copy', function() {
     .pipe(gulp.dest('./build/'));
 });
 
-gulp.task('build', gulpsync.sync(['delete', ['project', ['copy']]]));
+gulp.task('build', gulpsync.sync(['delete', ['project']]));

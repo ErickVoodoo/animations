@@ -2,14 +2,14 @@
 
 import React, { Component } from 'react';
 
-class Read extends Component {
+class Item extends Component {
   render(): React$Element<*> {
     return (
       <div>
-        Read
+        Read child: { this.props.params.id  }
       </div>
     );
   }
 };
 
-export default Read;
+export default Item;

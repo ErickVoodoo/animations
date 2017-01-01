@@ -4,22 +4,17 @@ var precss = require('precss');
 var stylelint = require('stylelint');
 var path = require('path');
 var appPackage = require('./package.json');
-var localhost = 'http://localhost:' + appPackage.devServerPort + '/';
 
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: [
-    'webpack/hot/only-dev-server',
-    'webpack-dev-server/client?' + localhost,
     'babel-polyfill',
     './src/index',
   ],
   output: {
     path: __dirname,
-    // hotUpdateMainFilename: 'update/[hash]/update.json',
-    // hotUpdateChunkFilename: 'update/[hash]/[id].update.js',
-    publicPath: localhost,
+    publicPath: '/',
     filename: 'index.js'
   },
   resolve: {
@@ -87,18 +82,45 @@ module.exports = {
     precss
   ],
   devtool: 'cheap-module-eval-source-map',
-  debug: true,
-  devServer: {
-    historyApiFallback: {
-      index: localhost
-    }
-  },
   plugins: [
     new HtmlWebpackPlugin({
-      inject: true,
+      // filename: './index.html',
+      inject: 'body',
       template: './index.html',
+      minify: {
+        removeComments: true,
+        collapseWhitespace: true,
+        collapseBooleanAttributes: true,
+        removeRedundantAttributes: true,
+        useShortDoctype: true,
+        // removeEmptyAttributes: true,
+        // removeStyleLinkTypeAttributes: true,
+        // removeOptionalTags: true,
+        keepClosingSlash: true,
+        minifyJS: true,
+        minifyCSS: true,
+        minifyURLs: true,
+      },
     }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false,
+        drop_console: true,
+        unsafe: true,
+        unused: true,
+        dead_code: true,
+        screw_ie8: true, // React doesn't support IE8
+      },
+      mangle: {
+        screw_ie8: true,
+      },
+      output: {
+        comments: false,
+        screw_ie8: true,
+      },
+      sourceMap: false,
+    }),
   ]
 };
